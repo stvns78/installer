@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	compute "github.com/Azure/azure-sdk-for-go/profiles/2018-03-01/compute/mgmt/compute"
-	network "github.com/Azure/azure-sdk-for-go/profiles/2018-03-01/network/mgmt/network"
+	network "github.com/Azure/azure-sdk-for-go/profiles/2020-09-01/network/mgmt/network"
 	resources "github.com/Azure/azure-sdk-for-go/profiles/2018-03-01/resources/mgmt/resources"
 	subscriptions "github.com/Azure/azure-sdk-for-go/profiles/2018-03-01/resources/mgmt/subscriptions"
 	compute0 "github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute"
