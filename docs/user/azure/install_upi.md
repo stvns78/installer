@@ -186,8 +186,8 @@ The deployment steps will read the Red Hat Enterprise Linux CoreOS virtual hard 
 from a blob. Create a storage account that will be used to store them and export its key as an environment variable.
 
 ```sh
-az storage account create -g $RESOURCE_GROUP --location $AZURE_REGION --name ${CLUSTER_NAME}sa --kind Storage --sku Standard_LRS
-export ACCOUNT_KEY=`az storage account keys list -g $RESOURCE_GROUP --account-name ${CLUSTER_NAME}sa --query "[0].value" -o tsv`
+az storage account create -g $RESOURCE_GROUP --location $AZURE_REGION --name ${CLUSTER_NAME} --kind Storage --sku Standard_LRS
+export ACCOUNT_KEY=`az storage account keys list -g $RESOURCE_GROUP --account-name ${CLUSTER_NAME} --query "[0].value" -o tsv`
 ```
 
 ### Copy the cluster image
@@ -197,9 +197,9 @@ We must copy and store it in a storage container instead. To do so, first create
 
 ```sh
 export OCP_ARCH="x86_64" # or "aarch64"
-az storage container create --name vhd --account-name ${CLUSTER_NAME}sa
+az storage container create --name vhd --account-name ${CLUSTER_NAME}
 export VHD_URL=$(openshift-install coreos print-stream-json | jq -r --arg arch "$OCP_ARCH" '.architectures[$arch]."rhel-coreos-extensions"."azure-disk".url')
-az storage blob copy start --account-name ${CLUSTER_NAME}sa --account-key $ACCOUNT_KEY --destination-blob "rhcos.vhd" --destination-container vhd --source-uri "$VHD_URL"
+az storage blob copy start --account-name ${CLUSTER_NAME} --account-key $ACCOUNT_KEY --destination-blob "rhcos.vhd" --destination-container vhd --source-uri "$VHD_URL"
 ```
 
 To track the progress, you can use:
@@ -208,7 +208,7 @@ To track the progress, you can use:
 status="unknown"
 while [ "$status" != "success" ]
 do
-  status=`az storage blob show --container-name vhd --name "rhcos.vhd" --account-name ${CLUSTER_NAME}sa --account-key $ACCOUNT_KEY -o tsv --query properties.copy.status`
+  status=`az storage blob show --container-name vhd --name "rhcos.vhd" --account-name ${CLUSTER_NAME} --account-key $ACCOUNT_KEY -o tsv --query properties.copy.status`
   echo $status
 done
 ```
@@ -218,8 +218,8 @@ done
 Create a blob storage container and upload the generated `bootstrap.ign` file:
 
 ```sh
-az storage container create --name files --account-name ${CLUSTER_NAME}sa
-az storage blob upload --account-name ${CLUSTER_NAME}sa --account-key $ACCOUNT_KEY -c "files" -f "bootstrap.ign" -n "bootstrap.ign"
+az storage container create --name files --account-name ${CLUSTER_NAME}
+az storage blob upload --account-name ${CLUSTER_NAME} --account-key $ACCOUNT_KEY -c "files" -f "bootstrap.ign" -n "bootstrap.ign"
 ```
 
 ## Create the DNS zones
